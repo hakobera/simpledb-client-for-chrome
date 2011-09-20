@@ -1,0 +1,13 @@
+{
+  "name":"SimpleDB Client",
+  "description":"Amazon SimpleDB Client for Google Chrome",
+  "version": "0.0.1",
+  "app": {
+      "launch": {
+          "local_path": "main.html"
+      }
+  },
+  "icons": {
+    "128": "images/icon.png"
+  }
+}
