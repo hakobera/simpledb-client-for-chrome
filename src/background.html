@@ -1,2 +1,23 @@
-SimpleDB Clent for Google Chrome
-================================
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script>
+  chrome.extension.onRequest.addListener(
+    function(request, sender, sendResponse) {
+      var url = request.url;
+      console.log(url);
+      xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          xhr.status
+          sendResponse({ status: xhr.status, responseText: xhr.responseText });
+        }
+      };
+      xhr.send();
+  });
+  </script>
+</head>
+</html>

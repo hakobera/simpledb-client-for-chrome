@@ -2,6 +2,8 @@
   "name":"SimpleDB Client",
   "description":"Amazon SimpleDB Client for Google Chrome",
   "version": "0.0.1",
+  "permissions": ["tabs" ,"http://*/*", "https://*/*"],
+  "background_page": "background.html",
   "app": {
       "launch": {
           "local_path": "main.html"
