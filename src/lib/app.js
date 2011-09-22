@@ -56,7 +56,7 @@ simpledb.event.runQuery = function(e) {
       alert(err.message);
     } else {
       result.forEach(function(item) {
-        var opt = $('<option>').text(item.name);
+        var opt = $('<option>').text(item.id);
         $.data(opt.get(0), 'item', item);
         items.append(opt);
       });

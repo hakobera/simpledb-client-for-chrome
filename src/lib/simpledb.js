@@ -65,7 +65,7 @@ simpledb.generateSignedURL = function(action, options, accessKeyId, secretAccess
  */
 simpledb.createItem = function(itemElement) {
   var name = simpledb.xml.findFirstByTagName(itemElement, 'Name').textContent
-    , item = { name: name }
+    , item = { id: name }
     , attrs = simpledb.xml.findByTagName(itemElement, 'Attribute')
     , i, l, attr, attrName, attrValue, prev, arr;
 
