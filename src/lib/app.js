@@ -69,11 +69,31 @@ simpledb.event.clearQuery = function(e) {
   $('#query').val('');
 };
 
+simpledb.event.ctrlDownInQuery = false;
+
+simpledb.event.keydownQuery = function(e) {
+  if (e.which === 17) {
+    simpledb.event.ctrlDownInQuery = true;
+  } else if (e.which === 13/*enter*/ && simpledb.event.ctrlDownInQuery) {
+    simpledb.event.runQuery(e);
+    return false;
+  }
+};
+
+simpledb.event.keyupQuery = function(e) {
+  if (e.which === 17) {
+    simpledb.event.ctrlDownInQuery = false;
+  }
+};
+
 $(function() {
   $('#listDomains').click(simpledb.event.listDomains);
   $('#region').change(simpledb.event.listDomains);
   $('#runQuery').click(simpledb.event.runQuery);
   $('#clearQuery').click(simpledb.event.clearQuery);
+
+  $('#query').keydown(simpledb.event.keydownQuery);
+  $('#query').keyup(simpledb.event.keyupQuery);
 
   var editor = CodeMirror.fromTextArea(document.getElementById('itemDetail'));
   $('#itemList').change(function() {
@@ -81,4 +101,6 @@ $(function() {
     var item = $.data(selected.get(0), 'item');
     editor.setValue(JSON.stringify(item, null, '  '));
   });
+
+  $('#listDomains').triggerHandler('click');
 });

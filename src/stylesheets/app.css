@@ -14,9 +14,10 @@ body {
 
 #main .sidebar {
   width: 160px;
-  height: 550px;
+  height: 600px;
   padding: 10px 10px 0 0;
-  border-right: 5px solid #eee;
+  background-color: #ccc;
+  border-right: 5px solid #999;
 }
 
 #main .sidebar #domain {
@@ -41,7 +42,7 @@ body {
 }
 
 #main .content #query {
-  height: 5em;
+  height: 3em;
 }
 
 #main .content #itemBox {
@@ -63,6 +64,7 @@ body {
 
 footer {
   margin-top: 0;
+  padding-top: 10px;
   padding-right: 20px;
   border-top: 5px solid #eee;
   text-align: right;

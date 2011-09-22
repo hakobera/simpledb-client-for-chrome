@@ -37,7 +37,7 @@
           <option value="sdb.ap-northeast-1.amazonaws.com">AP (Tokyo)</option>
         </select>
         <input type="text" id="accessKey" placeholder="AWS Access Key" value="AKIAIJQCJF7CH6INYFYA" alt="AWS Access Key"/>
-        <input type="text" id="secretKey" placeholder="AWS Access Secret" value="K5jfAKYiD4iHsCYbExZ+xW3JQqLhivYpo0OuXdGI"/>
+        <input type="password" id="secretKey" placeholder="AWS Access Secret" value="K5jfAKYiD4iHsCYbExZ+xW3JQqLhivYpo0OuXdGI"/>
       </form>
     </div>
   </div>
@@ -58,7 +58,7 @@
     <div id="queryBox" class="row">
       <form class="form-stacked">
         <fieldset>
-          <legend>Query</legend>
+          <legend>Query <span class="help-inline">Run Query (Ctrl+Enter)</span></legend>
           <div class="clearfix">
             <textarea id="query" class="xxlarge" placeholder="Query">select * from MyStore</textarea>
           </div>
