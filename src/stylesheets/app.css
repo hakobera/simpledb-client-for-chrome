@@ -6,12 +6,11 @@ body {
 #main {
 }
 
-#main .sidebar ul#domain {
+#main .sidebar #domain {
   height: 380px;
   margin: 0;
   background-color: #fff;
   border: 1px solid #999;
-  overflow: scroll;
 }
 
 #main .content {

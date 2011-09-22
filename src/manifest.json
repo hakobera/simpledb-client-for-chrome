@@ -2,7 +2,7 @@
   "name":"SimpleDB Client",
   "description":"Amazon SimpleDB Client for Google Chrome",
   "version": "0.0.1",
-  "permissions": ["tabs" ,"http://*/*", "https://*/*"],
+  "permissions": [ "tabs" ,"http://*.amazonaws.com/*", "https://*.amazonaws.com/*" ],
   "background_page": "background.html",
   "app": {
       "launch": {

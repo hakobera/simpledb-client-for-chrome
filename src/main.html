@@ -8,10 +8,10 @@
   <link rel="stylesheet" href="stylesheets/app.css"/>
   <script src="lib/jquery/jquery-1.6.4.js"></script>
   <script src="lib/jquery/jquery-ui-1.8.16.js"></script>
-  <script src="lib/jquery/jquery.form.js"></script>
+  <script src="lib/jquery/snbinder-0.5.3.js"></script>
   <script src="lib/aws/hmacsha1.js"></script>
   <script src="lib/aws/awssigner.js"></script>
-  <script src="lib/sdbclient.js"></script>
+  <script src="lib/simpledb.js"></script>
   <script src="lib/app.js"></script>
 </head>
 <body>
@@ -24,7 +24,6 @@
       <form class="pull-right">
         <input type="text" id="accessKey" placeholder="AWS Access Key" value="AKIAIJQCJF7CH6INYFYA" alt="AWS Access Key"/>
         <input type="text" id="secretKey" placeholder="AWS Access Secret" value="K5jfAKYiD4iHsCYbExZ+xW3JQqLhivYpo0OuXdGI"/>
-        <button id="connect" class="btn" type="submit">Connect</button>
       </form>
     </div>
   </div>
@@ -32,17 +31,19 @@
 <div id="main">
   <div class="container-fluid">
     <div class="sidebar">
-      <div class="well">
+      <div>
         <h5>Region</h5>
-        <select id="region" class="medium">
-          <option value="sdb.amazonaws.com">us-east-1</option>
-          <option value="sdb.us-west-1.amazonaws.com">us-west-1</option>
-          <option value="sdb.eu-west-1.amazonaws.com">eu-west-1</option>
-          <option value="sdb.ap-southeast-1.amazonaws.com">ap-southeast-1</option>
-          <option value="sdb.ap-northeast-1.amazonaws.com">ap-northeast-1</option>
+        <select id="region"">
+          <option value="sdb.amazonaws.com">US East (Northern Virginia)</option>
+          <option value="sdb.us-west-1.amazonaws.com">US West (Northern California)</option>
+          <option value="sdb.eu-west-1.amazonaws.com">EU (Ireland)</option>
+          <option value="sdb.ap-southeast-1.amazonaws.com">Asia Pacific (Singapore)</option>
+          <option value="sdb.ap-northeast-1.amazonaws.com">Asia Pacific (Tokyo)</option>
         </select>
-        <h5>Domains</h5>
-        <ul id="domain"></ul>
+      </div>
+      <div>
+        <h5>Domains <a id="listDomains" class="btn small">List Domains</a></h5>
+        <select id="domain" size="2"></select>
       </div>
     </div>
 

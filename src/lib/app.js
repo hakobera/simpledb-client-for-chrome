@@ -1,26 +1,29 @@
 $(function() {
-  $('.sidebar > .well').resizable({
-    minHeight: 500,
-    maxHeight: 500,
-    minWidth: 180
-  });
 
-  $('#connect').click(function(e) {
+  $('#listDomains').click(function(e) {
     e.preventDefault();
 
     var accessKey = $('#accessKey').val()
-      , secretKey = $('#secretKey').val();
+      , secretKey = $('#secretKey').val()
+      , host = $('#region').val();
 
-    var client = new sdbclient.Client({
-      accessKey: accessKey,
-      secretKey: secretKey
+    var client = simpledb.createClient({
+        accessKeyId: accessKey
+      , secretAccessKey: secretKey
+      , host: host
+      , debug: true
     });
-    
+
+    var domain = $('#domain');
     client.listDomains(function(err, domains) {
       if (err) {
         alert(err);
       } else {
         console.log(domains);
+        domain.html('');
+        domains.forEach(function(e) {
+          $('<option>').text(e).appendTo(domain);
+        });
       }
     });
   });
