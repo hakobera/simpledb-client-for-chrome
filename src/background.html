@@ -10,9 +10,9 @@
       console.log(url);
       xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
+      xhr.setRequestHeader('Content-Type', 'application/xml');
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
-          xhr.status
           sendResponse({ status: xhr.status, responseText: xhr.responseText });
         }
       };

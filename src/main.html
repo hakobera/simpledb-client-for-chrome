@@ -4,13 +4,19 @@
   <meta charset="utf-8"/>
   <title>SimpleDB Client</title>
   <link rel="stylesheet" href="stylesheets/jquery-ui-1.8.16.custom.css"/>
+  <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css"/>
   <link rel="stylesheet" href="bootstrap/bootstrap.min.css"/>
   <link rel="stylesheet" href="stylesheets/app.css"/>
   <script src="lib/jquery/jquery-1.6.4.js"></script>
   <script src="lib/jquery/jquery-ui-1.8.16.js"></script>
-  <script src="lib/jquery/snbinder-0.5.3.js"></script>
+  <script src="bootstrap/js/bootstrap-dropdown.js"></script>
+  <script src="bootstrap/js/bootstrap-modal.js"></script>
   <script src="lib/aws/hmacsha1.js"></script>
   <script src="lib/aws/awssigner.js"></script>
+  <script src="lib/codemirror/lib/codemirror.js"></script>
+  <script src="lib/codemirror/mode/javascript/javascript.js"></script>
+  <link rel="stylesheet" href="lib/codemirror/theme/night.css"/>
+  <script src="lib/xml.js"></script>
   <script src="lib/simpledb.js"></script>
   <script src="lib/app.js"></script>
 </head>
@@ -21,7 +27,14 @@
       <span class="brand">SimpleDB Client</span>
       <ul class="nav">
       </ul>
-      <form class="pull-right">
+      <form class="pull-left">
+        <select id="region" class="medium">
+          <option value="sdb.amazonaws.com">US East</option>
+          <option value="sdb.us-west-1.amazonaws.com">US West</option>
+          <option value="sdb.eu-west-1.amazonaws.com">EU (Ireland)</option>
+          <option value="sdb.ap-southeast-1.amazonaws.com">AP (Singapore)</option>
+          <option value="sdb.ap-northeast-1.amazonaws.com">AP (Tokyo)</option>
+        </select>
         <input type="text" id="accessKey" placeholder="AWS Access Key" value="AKIAIJQCJF7CH6INYFYA" alt="AWS Access Key"/>
         <input type="text" id="secretKey" placeholder="AWS Access Secret" value="K5jfAKYiD4iHsCYbExZ+xW3JQqLhivYpo0OuXdGI"/>
       </form>
@@ -31,35 +44,35 @@
 <div id="main">
   <div class="container-fluid">
     <div class="sidebar">
-      <div>
-        <h5>Region</h5>
-        <select id="region"">
-          <option value="sdb.amazonaws.com">US East (Northern Virginia)</option>
-          <option value="sdb.us-west-1.amazonaws.com">US West (Northern California)</option>
-          <option value="sdb.eu-west-1.amazonaws.com">EU (Ireland)</option>
-          <option value="sdb.ap-southeast-1.amazonaws.com">Asia Pacific (Singapore)</option>
-          <option value="sdb.ap-northeast-1.amazonaws.com">Asia Pacific (Tokyo)</option>
-        </select>
-      </div>
-      <div>
-        <h5>Domains <a id="listDomains" class="btn small">List Domains</a></h5>
+      <div id="domainBox">
+        <h5><a id="listDomains" class="btn small">List Domains</a></h5>
+        <img id="domainLoader" class="loader" src="images/loader_mini.gif" alt="loader"/>
         <select id="domain" size="2"></select>
       </div>
     </div>
 
     <div class="content">
       <div id="queryBox" class="row">
-        <form>
-          <textarea id="query" placeholder="Query"></textarea>
-          <div class="actions">
-            <button class="btn primary" type="submit">Run</button>
+        <form class="form-stacked">
+          <fieldset>
+            <legend>Query</legend>
+            <div class="clearfix">
+              <textarea id="query" class="xxlarge" placeholder="Query">select * from MyStore</textarea>
+            </div>
+          </fieldset>
+          <div>
+            <button id="runQuery" class="btn primary">Run Query</button>
+            <button id="clearQuery" class="btn">Clear</button>
           </div>
         </form>
-      </div>
-      <div id="resultBox" class="row">
-        <div id="result">
-          <div id="data"></div>
-          <div id="details"></div>
+        
+        <div id="itemBox">
+          <div class="leftBox">
+            <select id="itemList" class="medium" size="2"></select>
+          </div>
+          <div class="rightBox">
+            <textarea id="itemDetail"></textarea>
+          </div>
         </div>
       </div>
     </div>

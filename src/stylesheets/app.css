@@ -6,6 +6,10 @@ body {
 #main {
 }
 
+#main .sidebar {
+  position: relative;
+}
+
 #main .sidebar #domain {
   height: 380px;
   margin: 0;
@@ -13,20 +17,50 @@ body {
   border: 1px solid #999;
 }
 
-#main .content {
-  padding-left: 20px;
+#main .sidebar #domainBox {
+  position: relative;
 }
 
-#query {
-  width: 100%;
+#main .sidebar #domainBox #domainLoader {
+  position: absolute;
+  top: 45px;
+  left: 10px;
+}
+
+#main .content {
+  padding-left: 10px;
+}
+
+#main .content #query {
   height: 5em;
 }
 
-#resultBox {
-  background-color: #ccc;
+#main .content #itemBox {
+  display: -webkit-box;
+}
+
+#main .content #itemBox .leftBox {
+  width: 180px;
+  padding-left: 20px;
+}
+
+#main .content #itemBox .leftBox #itemList {
+  height: 245px;
+}
+
+#main .content #itemBox .rightBox {
+  -webkit-box-flex: 1;
 }
 
 footer {
   padding-right: 20px;
   text-align: right;
+}
+
+.loader {
+  display: none;
+}
+
+.CodeMirror {
+  font-size: 11px;
 }

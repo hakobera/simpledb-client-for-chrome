@@ -2,13 +2,6 @@
 var simpledb = simpledb || {};
 
 /**
- * Out debug message to console.
- */
-simpledb.debug = function() {
-  console.log(arguments);
-};
-
-/**
  * Generate request URL for SimpleDB.
  * URL has signature that is generated using AWS access key and access secret key.
  *
@@ -58,10 +51,42 @@ simpledb.generateSignedURL = function(action, options, accessKeyId, secretAccess
   displayUri += "?" + payload;
 
   if (debug) {
-    simpledb.debug('Signed URL = ', displayUri);
+    console.log('Signed URL = ', displayUri);
   }
 
   return displayUri;
+};
+
+/**
+ * Create item object from SimpleDB Response XML
+ *
+ * @param {Element} itemElement XML element include item info.
+ * @return {Object} item
+ */
+simpledb.createItem = function(itemElement) {
+  var name = simpledb.xml.findFirstByTagName(itemElement, 'Name').textContent
+    , item = { name: name }
+    , attrs = simpledb.xml.findByTagName(itemElement, 'Attribute')
+    , i, l, attr, attrName, attrValue, prev, arr;
+
+  for (i = 0, l = attrs.length; i <l; ++i) {
+    attr = attrs[i];
+    attrName = simpledb.xml.findFirstByTagName(attr, 'Name').textContent
+    attrValue = simpledb.xml.findFirstByTagName(attr, 'Value').textContent;
+    if (item[attrName]) {
+      prev = item[attrName];
+      if (Array.isArray(prev)) {
+        prev.push(attrValue);
+      } else {
+        arr = [ prev, attrValue ];
+        item[attrName] = arr;
+      }
+    } else {
+      item[attrName] = attrValue;
+    }
+  }
+
+  return item;
 };
 
 /**
@@ -138,11 +163,30 @@ simpledb.Client.prototype.generateSignedURL = function(actionName, options) {
  * @param {Function} callback Callback function when get response. Expected signature is fn(err, data)
  */
 simpledb.Client.prototype.sendRequest = function(url, callback) {
+  var self = this;
   chrome.extension.sendRequest({ url: url, debug: this.debug }, function(response) {
+    var dom = new DOMParser().parseFromString(response.responseText, 'text/xml');
+
+    if (self.debug) {
+      console.log(dom);
+    }
+
     if (response.status !== 200) {
-      callback('Status error. Status code is ' + response.status);
+      var cause = simpledb.xml.findFirstByTagName(dom, 'Error');
+      console.log(cause);
+      var err = {
+          status: response.status
+        , code: simpledb.xml.findFirstByTagName(dom, 'Error').textContent
+        , message: simpledb.xml.findFirstByTagName(dom, 'Message').textContent
+      };
+
+      if (self.debug) {
+        console.log(err);
+      }
+
+      callback(err);
     } else {
-      callback(null, response.responseText);
+      callback(null, dom);
     }
   });
 };
@@ -160,21 +204,39 @@ simpledb.Client.prototype.call = function(action, options, callback) {
 };
 
 /**
- * Call listDomains API.
+ * Call ListDomains API.
  *
  * @param {Function} callback Callback function when get response
  */
 simpledb.Client.prototype.listDomains = function(callback) {
-  var url = this.call('ListDomains', null, function(err, data) {
+  var url = this.call('ListDomains', null, function(err, response) {
     if (err) {
-      console.log(err);
       callback(err);
     } else {
-      console.log(data);
-      var ret = $(data).find('DomainName').map(function() {
-        return $(this).text();
+      var domainNames = simpledb.xml.findByTagName(response, 'DomainName');
+      var ret = domainNames.map(function(e) {
+        return e.textContent;
       });
-      callback(null, ret.toArray());
+      callback(null, ret);
+    }
+  });
+};
+
+/**
+ * Call Select API.
+ *
+ * @param {Function} callback Callback function when get response
+ */
+simpledb.Client.prototype.select = function(query, callback) {
+  var url = this.call('Select', { SelectExpression: query }, function(err, response) {
+    if (err) {
+      callback(err);
+    } else {
+      var items = simpledb.xml.findByTagName(response, 'Item');
+      var ret = items.map(function(e) {
+        return simpledb.createItem(e);
+      });
+      callback(null, ret);
     }
   });
 };
