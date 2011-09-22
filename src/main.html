@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="lib/codemirror/theme/night.css"/>
   <script src="lib/xml.js"></script>
   <script src="lib/simpledb.js"></script>
+  <script src="lib/ui.js"></script>
   <script src="lib/app.js"></script>
 </head>
 <body>
@@ -42,37 +43,38 @@
   </div>
 </div>
 <div id="main">
-  <div class="container-fluid">
-    <div class="sidebar">
-      <div id="domainBox">
-        <h5><a id="listDomains" class="btn small">List Domains</a></h5>
-        <img id="domainLoader" class="loader" src="images/loader_mini.gif" alt="loader"/>
+  <div class="sidebar">
+    <form id="domainBox" class="form-stacked">
+      <img id="domainLoader" class="loader" src="images/loader_mini.gif" alt="loader"/>
+      <fieldset>
+        <legend>Domains</legend>
         <select id="domain" size="2"></select>
-      </div>
-    </div>
+      </fieldset>
+      <button id="listDomains" class="btn">Refresh</button>
+    </form>
+  </div>
 
-    <div class="content">
-      <div id="queryBox" class="row">
-        <form class="form-stacked">
-          <fieldset>
-            <legend>Query</legend>
-            <div class="clearfix">
-              <textarea id="query" class="xxlarge" placeholder="Query">select * from MyStore</textarea>
-            </div>
-          </fieldset>
-          <div>
-            <button id="runQuery" class="btn primary">Run Query</button>
-            <button id="clearQuery" class="btn">Clear</button>
+  <div class="content">
+    <div id="queryBox" class="row">
+      <form class="form-stacked">
+        <fieldset>
+          <legend>Query</legend>
+          <div class="clearfix">
+            <textarea id="query" class="xxlarge" placeholder="Query">select * from MyStore</textarea>
           </div>
-        </form>
-        
-        <div id="itemBox">
-          <div class="leftBox">
-            <select id="itemList" class="medium" size="2"></select>
-          </div>
-          <div class="rightBox">
-            <textarea id="itemDetail"></textarea>
-          </div>
+        </fieldset>
+        <div>
+          <button id="runQuery" class="btn primary">Run Query</button>
+          <button id="clearQuery" class="btn">Clear</button>
+        </div>
+      </form>
+
+      <div id="itemBox">
+        <div class="leftBox">
+          <select id="itemList" class="medium" size="2"></select>
+        </div>
+        <div class="rightBox">
+          <textarea id="itemDetail"></textarea>
         </div>
       </div>
     </div>

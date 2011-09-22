@@ -1,5 +1,6 @@
 var simpledb = simpledb || {};
 simpledb.event = simpledb.event || {};
+simpledb.ui = simpledb.ui || {};
 
 simpledb.event.createClient = function() {
   var accessKey = $('#accessKey').val()
@@ -70,6 +71,7 @@ simpledb.event.clearQuery = function(e) {
 
 $(function() {
   $('#listDomains').click(simpledb.event.listDomains);
+  $('#region').change(simpledb.event.listDomains);
   $('#runQuery').click(simpledb.event.runQuery);
   $('#clearQuery').click(simpledb.event.clearQuery);
 
