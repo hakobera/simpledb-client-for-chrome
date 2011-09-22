@@ -6,7 +6,7 @@ task 'crxmake' do
   # create crx
   CrxMake.make(
                :ex_dir => "./src",
-               #:pkey   => "./src.pem",
+               :pkey   => "./src.pem",
                :crx_output => "./package/simpledb_client.crx",
                :verbose => true,
                :ignorefile => /\.swp/,
@@ -16,7 +16,7 @@ task 'crxmake' do
   # create zip for Google Extension Gallery
   CrxMake.zip(
               :ex_dir => "./src",
-              #:pkey   => "./src.pem",
+              :pkey   => "./src.pem",
               :zip_output => "./package/simpledb_client.zip",
               :verbose => true,
               :ignorefile => /\.swp/,
