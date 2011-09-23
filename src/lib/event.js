@@ -59,7 +59,9 @@ simpledb.event.listDomains = function(e) {
 /**
  * Call CreateDomain API and refresh domain list.
  */
-simpledb.event.createDomain = function() {
+simpledb.event.createDomain = function(e) {
+  e.preventDefault();
+    
   simpledb.ui.createDomainDialog.show(function(domainName) {
     if (!domainName) {
       return false;
@@ -79,7 +81,9 @@ simpledb.event.createDomain = function() {
 /**
  * Call DeleteDomain API and refresh domain list.
  */
-simpledb.event.deleteDomain = function() {
+simpledb.event.deleteDomain = function(e) {
+  e.preventDefault();
+
   var domainName = $('option:selected:first', '#domain').val();
   console.log(domainName);
   if (!domainName || domainName.length === 0) {
