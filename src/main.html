@@ -52,8 +52,8 @@
         <select id="domain" size="2"></select>
       </fieldset>
       <button id="listDomains" class="btn small">Refresh</button>
-      <a class="btn small" data-controls-modal="createDomainDialog" data-backdrop="static" >Create</a>
-      <button id="deleteDomain" class="btn small">Delete</button>
+      <button id="createDomain" class="btn small info">Create</button>
+      <button id="deleteDomain" class="btn small danger">Delete</button>
     </form>
   </div>
 
@@ -101,6 +101,20 @@
   </div>
   <div class="modal-footer">
     <a href="#" class="btn primary ok">Create</a>
+    <a href="#" class="btn secondary cancel">Cancel</a>
+  </div>
+</div>
+
+<div id="confirmDialog" class="modal hide fade">
+  <div class="modal-header">
+    <a href="#" class="close">&times;</a>
+    <h3 class="title"></h3>
+  </div>
+  <div class="modal-body">
+    <div class="content"></div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn primary ok">OK</a>
     <a href="#" class="btn secondary cancel">Cancel</a>
   </div>
 </div>

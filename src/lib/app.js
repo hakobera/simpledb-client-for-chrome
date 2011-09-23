@@ -1,6 +1,5 @@
 $(function() {
   simpledb.ui.init();
-  simpledb.ui.itemDetailEditor = CodeMirror.fromTextArea(document.getElementById('itemDetail'));
 
   $('#region').change(simpledb.event.listDomains);
 

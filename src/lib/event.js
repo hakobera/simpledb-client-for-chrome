@@ -60,23 +60,24 @@ simpledb.event.listDomains = function(e) {
  * Call CreateDomain API and refresh domain list.
  */
 simpledb.event.createDomain = function() {
-  var domainName = $('#domainName').val();
-  if (!domainName || domainName.length === 0) {
-    return false;
-  }
-
-  var client = simpledb.event.createClient();
-  client.createDomain(domainName, function(err, result) {
-    if (err) {
-      alert(err.message);
-    } else {
-      simpledb.event.listDomains();
+  simpledb.ui.createDomainDialog.show(function(domainName) {
+    if (!domainName) {
+      return false;
     }
+
+    var client = simpledb.event.createClient();
+    client.createDomain(domainName, function(err, result) {
+      if (err) {
+        alert(err.message);
+      } else {
+        simpledb.event.listDomains();
+      }
+    });
   });
 };
 
 /**
- * Call CreateDomain API and refresh domain list.
+ * Call DeleteDomain API and refresh domain list.
  */
 simpledb.event.deleteDomain = function() {
   var domainName = $('option:selected:first', '#domain').val();
@@ -85,16 +86,16 @@ simpledb.event.deleteDomain = function() {
     return false;
   }
 
-  if (!confirm('Are you ok to delete "' + domainName + '"?')) {
-    return false;
-  };
-
-  var client = simpledb.event.createClient();
-  client.deleteDomain(domainName, function(err, result) {
-    if (err) {
-      alert(err.message);
-    } else {
-      simpledb.event.listDomains();
+  simpledb.ui.confirmDialog.show('Delete Domain', 'Are you ok to delete "' + domainName + '"?', function(ret) {
+    if (ret) {
+      var client = simpledb.event.createClient();
+      client.deleteDomain(domainName, function(err, result) {
+        if (err) {
+          alert(err.message);
+        } else {
+          simpledb.event.listDomains();
+        }
+      });
     }
   });
 };
@@ -115,8 +116,10 @@ simpledb.event.runQuery = function(e) {
     if (err) {
       alert(err.message);
     } else {
+      console.log(result);
       result.forEach(function(item) {
-        var opt = $('<option>').text(item.id);
+        var opt = $('<option>');
+        opt.text(item._id);
         $.data(opt.get(0), 'item', item);
         items.append(opt);
       });
