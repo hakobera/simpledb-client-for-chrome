@@ -223,6 +223,38 @@ simpledb.Client.prototype.listDomains = function(callback) {
 };
 
 /**
+ * Call CreateDomain API.
+ *
+ * @param {String} domainName Domain name to create
+ * @param {Function} callback Callback function when get response
+ */
+simpledb.Client.prototype.createDomain = function(domainName, callback) {
+  var url = this.call('CreateDomain', { DomainName: domainName }, function(err, response) {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, response);
+    }
+  });
+};
+
+/**
+ * Call DeleteDomain API.
+ *
+ * @param {String} domainName Domain name to delete
+ * @param {Function} callback Callback function when get response
+ */
+simpledb.Client.prototype.deleteDomain = function(domainName, callback) {
+  var url = this.call('DeleteDomain', { DomainName: domainName }, function(err, response) {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, response);
+    }
+  });
+};
+
+/**
  * Call Select API.
  *
  * @param {Function} callback Callback function when get response
