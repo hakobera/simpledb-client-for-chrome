@@ -13,6 +13,7 @@ body {
 }
 
 #main .sidebar {
+  min-width: 200px;
   width: 200px;
   height: 600px;
   padding: 10px 10px 0 0;
@@ -20,10 +21,13 @@ body {
   border-right: 5px solid #999;
 }
 
+#main .sidebar #region {
+  width: 100%;
+}
+
 #main .sidebar #domain {
   width: 100%;
-  height: 380px;
-  background-color: #fff;
+  height: 200px;
   border: 1px solid #999;
 }
 
@@ -33,8 +37,8 @@ body {
 
 #main .sidebar #domainBox #domainLoader {
   position: absolute;
-  top: 40px;
-  left: 30px;
+  top: 45px;
+  left: 10px;
 }
 
 #main .content {
@@ -75,5 +79,7 @@ footer {
 }
 
 .CodeMirror {
-  font-size: 11px;
+  min-height: 285px;
+  max-width: 600px;
+  border: 1px solid #ccc;
 }

@@ -2,12 +2,11 @@ var simpledb = simpledb || {};
 simpledb.ui = simpledb.ui || {};
 
 /**
- * Confirm dialog.
- *
+ * Message dialog.
  * @class
  */
-simpledb.ui.ConfirmDialog = function() {
-  var dialog = $('#confirmDialog');
+simpledb.ui.MessageDialog = function(id) {
+  var dialog = $('#' + id);
   dialog.modal({
       backdrop: true
     , keyboard: true
@@ -27,13 +26,13 @@ simpledb.ui.ConfirmDialog = function() {
 };
 
 /**
- * Show confirm dialog.
+ * Show message dialog.
  *
  * @param {String} title
  * @param {String} message
  * @param {Function} callback
  */
-simpledb.ui.ConfirmDialog.prototype.show = function(title, message, callback) {
+simpledb.ui.MessageDialog.prototype.show = function(title, message, callback) {
   var dialog = this.dialog;
 
   dialog.unbind('shown');
@@ -56,8 +55,8 @@ simpledb.ui.ConfirmDialog.prototype.show = function(title, message, callback) {
  *
  * @class
  */
-simpledb.ui.CreateDomainDialog = function() {
-  var dialog = $('#createDomainDialog');
+simpledb.ui.CreateDomainDialog = function(id) {
+  var dialog = $('#' + id);
   dialog.modal({
       backdrop: true
     , keyboard: true
@@ -103,7 +102,7 @@ simpledb.ui.CreateDomainDialog.prototype.show = function(callback) {
 };
 
 simpledb.ui.itemDetailEditor = null;
-simpledb.ui.confirmDialog = null;
+simpledb.ui.messageDialog = null;
 simpledb.ui.createDomainDialog = null;
 
 /**
@@ -117,6 +116,6 @@ simpledb.ui.init = function() {
 
   simpledb.ui.itemDetailEditor = CodeMirror.fromTextArea(document.getElementById('itemDetail'));
 
-  simpledb.ui.confirmDialog = new simpledb.ui.ConfirmDialog();
-  simpledb.ui.createDomainDialog = new simpledb.ui.CreateDomainDialog();
+  simpledb.ui.messageDialog = new simpledb.ui.MessageDialog('messageDialog');
+  simpledb.ui.createDomainDialog = new simpledb.ui.CreateDomainDialog('createDomainDialog');
 };

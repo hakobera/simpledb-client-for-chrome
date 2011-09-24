@@ -58,38 +58,6 @@ simpledb.generateSignedURL = function(action, options, accessKeyId, secretAccess
 };
 
 /**
- * Create item object from SimpleDB Response XML
- *
- * @param {Element} itemElement XML element include item info.
- * @return {Object} item
- */
-simpledb.createItem = function(itemElement) {
-  var name = simpledb.xml.findFirstByTagName(itemElement, 'Name').textContent
-    , item = { _id: name }
-    , attrs = simpledb.xml.findByTagName(itemElement, 'Attribute')
-    , i, l, attr, attrName, attrValue, prev, arr;
-
-  for (i = 0, l = attrs.length; i <l; ++i) {
-    attr = attrs[i];
-    attrName = simpledb.xml.findFirstByTagName(attr, 'Name').textContent
-    attrValue = simpledb.xml.findFirstByTagName(attr, 'Value').textContent;
-    if (item[attrName]) {
-      prev = item[attrName];
-      if (Array.isArray(prev)) {
-        prev.push(attrValue);
-      } else {
-        arr = [ prev, attrValue ];
-        item[attrName] = arr;
-      }
-    } else {
-      item[attrName] = attrValue;
-    }
-  }
-
-  return item;
-};
-
-/**
  * Create Amazon SimpleDB API Client and return it.
  * By default client use default endpont (sdb.amazonaws.com).
  * You can change it with the "host" option
@@ -144,8 +112,8 @@ simpledb.Client = function(options) {
  * @return {String} Signed URL for SimpleDB request
  */
 simpledb.Client.prototype.generateSignedURL = function(actionName, options) {
-  var url = simpledb.generateSignedURL(
-      actionName
+  return simpledb.generateSignedURL(
+    actionName
     , options
     , this.accessKeyId
     , this.secretAccessKey
@@ -153,7 +121,6 @@ simpledb.Client.prototype.generateSignedURL = function(actionName, options) {
     , this.version
     , this.consistent
     , this.debug);
-  return url;
 };
 
 /**
@@ -175,7 +142,7 @@ simpledb.Client.prototype.sendRequest = function(url, callback) {
       var cause = simpledb.xml.findFirstByTagName(dom, 'Error');
       console.log(cause);
       var err = {
-          status: response.status
+        status: response.status
         , code: simpledb.xml.findFirstByTagName(dom, 'Error').textContent
         , message: simpledb.xml.findFirstByTagName(dom, 'Message').textContent
       };
@@ -194,7 +161,7 @@ simpledb.Client.prototype.sendRequest = function(url, callback) {
 /**
  * Call specified Amazon SimpleDB API.
  *
- * @param {String} url A URL to send HTTP request
+ * @param {String} action SimpleDB action name
  * @param {Object} options Optional parameters to send
  * @param {Function} callback Callback function when get response. Expected signature is fn(err, data)
  */
@@ -209,7 +176,7 @@ simpledb.Client.prototype.call = function(action, options, callback) {
  * @param {Function} callback Callback function when get response
  */
 simpledb.Client.prototype.listDomains = function(callback) {
-  var url = this.call('ListDomains', null, function(err, response) {
+  this.call('ListDomains', null, function(err, response) {
     if (err) {
       callback(err);
     } else {
@@ -229,7 +196,7 @@ simpledb.Client.prototype.listDomains = function(callback) {
  * @param {Function} callback Callback function when get response
  */
 simpledb.Client.prototype.createDomain = function(domainName, callback) {
-  var url = this.call('CreateDomain', { DomainName: domainName }, function(err, response) {
+  this.call('CreateDomain', { DomainName: domainName }, function(err, response) {
     if (err) {
       callback(err);
     } else {
@@ -245,7 +212,7 @@ simpledb.Client.prototype.createDomain = function(domainName, callback) {
  * @param {Function} callback Callback function when get response
  */
 simpledb.Client.prototype.deleteDomain = function(domainName, callback) {
-  var url = this.call('DeleteDomain', { DomainName: domainName }, function(err, response) {
+  this.call('DeleteDomain', { DomainName: domainName }, function(err, response) {
     if (err) {
       callback(err);
     } else {
@@ -260,15 +227,69 @@ simpledb.Client.prototype.deleteDomain = function(domainName, callback) {
  * @param {Function} callback Callback function when get response
  */
 simpledb.Client.prototype.select = function(query, callback) {
-  var url = this.call('Select', { SelectExpression: query }, function(err, response) {
+  this.call('Select', { SelectExpression: query }, function(err, response) {
     if (err) {
       callback(err);
     } else {
       var items = simpledb.xml.findByTagName(response, 'Item');
       var ret = items.map(function(e) {
-        return simpledb.createItem(e);
+        return simpledb.Item.create(e);
       });
       callback(null, ret);
     }
   });
 };
+
+/**
+ * Call DeleteItem API.
+ *
+ * @param {String} domainName Domain name to delete
+ * @param {Function} callback Callback function when get response
+ */
+simpledb.Client.prototype.deleteItem = function(domainName, callback) {
+  this.call('DeleteDomain', { DomainName: domainName }, function(err, response) {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, response);
+    }
+  });
+};
+
+simpledb.Item = function(id, attributes) {
+  this.id = id;
+  this.attributes = attributes;
+};
+
+/**
+ * Create item object from SimpleDB Response XML
+ *
+ * @param {Element} itemElement XML element include item info.
+ * @return {Object} item
+ */
+simpledb.Item.create = function(itemElement) {
+  var name = simpledb.xml.findFirstByTagName(itemElement, 'Name').textContent
+    , itemAttrs = {}
+    , attrs = simpledb.xml.findByTagName(itemElement, 'Attribute')
+    , i, l, attr, attrName, attrValue, prev, arr;
+
+  for (i = 0,l = attrs.length; i < l; ++i) {
+    attr = attrs[i];
+    attrName = simpledb.xml.findFirstByTagName(attr, 'Name').textContent;
+    attrValue = simpledb.xml.findFirstByTagName(attr, 'Value').textContent;
+    if (itemAttrs[attrName]) {
+      prev = itemAttrs[attrName];
+      if (Array.isArray(prev)) {
+        prev.push(attrValue);
+      } else {
+        arr = [ prev, attrValue ];
+        itemAttrs[attrName] = arr;
+      }
+    } else {
+      itemAttrs[attrName] = attrValue;
+    }
+  }
+
+  return new simpledb.Item(name, itemAttrs);
+};
+

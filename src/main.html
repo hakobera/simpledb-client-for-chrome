@@ -4,22 +4,22 @@
   <meta charset="utf-8"/>
   <title>SimpleDB Client</title>
   <link rel="stylesheet" href="stylesheets/jquery-ui-1.8.16.custom.css"/>
-  <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css"/>
+  <link rel="stylesheet" href="lib/vendor/codemirror/lib/codemirror.css"/>
   <link rel="stylesheet" href="bootstrap/bootstrap.min.css"/>
   <link rel="stylesheet" href="stylesheets/app.css"/>
-  <script src="lib/jquery/jquery-1.6.4.js"></script>
-  <script src="lib/jquery/jquery-ui-1.8.16.js"></script>
+  <script src="lib/vendor/jquery/jquery-1.6.4.js"></script>
+  <script src="lib/vendor/jquery/jquery-ui-1.8.16.js"></script>
   <script src="bootstrap/js/bootstrap-dropdown.js"></script>
   <script src="bootstrap/js/bootstrap-modal.js"></script>
-  <script src="lib/aws/hmacsha1.js"></script>
-  <script src="lib/aws/awssigner.js"></script>
-  <script src="lib/codemirror/lib/codemirror.js"></script>
-  <script src="lib/codemirror/mode/javascript/javascript.js"></script>
-  <link rel="stylesheet" href="lib/codemirror/theme/night.css"/>
-  <script src="lib/xml.js"></script>
-  <script src="lib/simpledb.js"></script>
-  <script src="lib/event.js"></script>
-  <script src="lib/ui.js"></script>
+  <script src="lib/vendor/aws/hmacsha1.js"></script>
+  <script src="lib/vendor/aws/awssigner.js"></script>
+  <script src="lib/vendor/codemirror/lib/codemirror.js"></script>
+  <script src="lib/vendor/codemirror/mode/javascript/javascript.js"></script>
+  <link rel="stylesheet" href="lib/vendor/codemirror/theme/night.css"/>
+  <script src="lib/sdbclient/xml.js"></script>
+  <script src="lib/sdbclient/simpledb.js"></script>
+  <script src="lib/sdbclient/event.js"></script>
+  <script src="lib/sdbclient/ui.js"></script>
   <script src="lib/app.js"></script>
 </head>
 <body>
@@ -27,16 +27,7 @@
   <div class="topbar-inner">
     <div class="container">
       <span class="brand">SimpleDB Client</span>
-      <ul class="nav">
-      </ul>
       <form class="pull-left">
-        <select id="region" class="medium">
-          <option value="sdb.amazonaws.com">US East</option>
-          <option value="sdb.us-west-1.amazonaws.com">US West</option>
-          <option value="sdb.eu-west-1.amazonaws.com">EU (Ireland)</option>
-          <option value="sdb.ap-southeast-1.amazonaws.com">AP (Singapore)</option>
-          <option value="sdb.ap-northeast-1.amazonaws.com">AP (Tokyo)</option>
-        </select>
         <input type="text" id="accessKey" placeholder="AWS Access Key" value="AKIAIJQCJF7CH6INYFYA" alt="AWS Access Key"/>
         <input type="password" id="secretKey" placeholder="AWS Access Secret" value="K5jfAKYiD4iHsCYbExZ+xW3JQqLhivYpo0OuXdGI"/>
       </form>
@@ -45,13 +36,23 @@
 </div>
 <div id="main">
   <div class="sidebar">
-    <form id="domainBox" class="form-stacked">
-      <img id="domainLoader" class="loader" src="images/loader_mini.gif" alt="loader"/>
+    <form class="form-stacked">
       <fieldset>
-        <legend>Domains</legend>
-        <select id="domain" size="2"></select>
+        <legend>Regions</legend>
+        <select id="region" class="medium">
+          <option value="sdb.amazonaws.com">US East (Virginia)</option>
+          <option value="sdb.us-west-1.amazonaws.com">US West (N.California)</option>
+          <option value="sdb.eu-west-1.amazonaws.com">EU (Ireland)</option>
+          <option value="sdb.ap-southeast-1.amazonaws.com">Asia Pacific (Singapore)</option>
+          <option value="sdb.ap-northeast-1.amazonaws.com">Asia Pacific (Tokyo)</option>
+        </select>
       </fieldset>
-      <button id="listDomains" class="btn small">Refresh</button>
+      <fieldset id="domainBox">
+        <legend>Domains <button id="listDomains" class="btn small">Reload</button>
+</legend>
+        <img id="domainLoader" class="loader" src="images/loader_mini.gif" alt="loader"/>
+        <select id="domain" size="2" class="medium"></select>
+      </fieldset>
       <button id="createDomain" class="btn small info">Create</button>
       <button id="deleteDomain" class="btn small danger">Delete</button>
     </form>
@@ -61,23 +62,28 @@
     <div id="queryBox" class="row">
       <form class="form-stacked">
         <fieldset>
-          <legend>Query <span class="help-inline">Run Query (Ctrl+Enter)</span></legend>
+          <legend>Query <button id="runQuery" class="btn small primary">Run Query (Ctrl + Enter)</button>
+<span class="help-inline"><a href="http://docs.amazonwebservices.com/AmazonSimpleDB/2009-04-15/DeveloperGuide/index.html?UsingSelect.html" target="sdbclient-document">Documentation</a></a></span></legend>
           <div class="clearfix">
-            <textarea id="query" class="xxlarge" placeholder="Query">select * from MyStore</textarea>
+            <textarea id="query" class="xxlarge" placeholder="select output_list from domain_name [where expression] [sort_instructions] [limit limit]"></textarea>
           </div>
         </fieldset>
-        <div>
-          <button id="runQuery" class="btn primary">Run Query</button>
-          <button id="clearQuery" class="btn">Clear</button>
-        </div>
       </form>
 
       <div id="itemBox">
         <div class="leftBox">
+          <h4>Items</h4>
           <select id="itemList" class="medium" size="2"></select>
+          <div class="buttons">
+          </div>
         </div>
         <div class="rightBox">
-          <textarea id="itemDetail"></textarea>
+          <h4>Attributes</h4>
+          <form>
+            <textarea id="itemDetail"></textarea>
+            <div class="buttons">
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -105,7 +111,7 @@
   </div>
 </div>
 
-<div id="confirmDialog" class="modal hide fade">
+<div id="messageDialog" class="modal hide fade">
   <div class="modal-header">
     <a href="#" class="close">&times;</a>
     <h3 class="title"></h3>

@@ -16,14 +16,12 @@ simpledb.event.createClient = function() {
     , secretKey = $('#secretKey').val()
     , host = $('#region').val();
 
-  var client = simpledb.createClient({
+  return simpledb.createClient({
       accessKeyId: accessKey
     , secretAccessKey: secretKey
     , host: host
     , debug: true
   });
-
-  return client;
 };
 
 /**
@@ -68,7 +66,7 @@ simpledb.event.createDomain = function(e) {
     }
 
     var client = simpledb.event.createClient();
-    client.createDomain(domainName, function(err, result) {
+    client.createDomain(domainName, function(err) {
       if (err) {
         alert(err.message);
       } else {
@@ -90,10 +88,10 @@ simpledb.event.deleteDomain = function(e) {
     return false;
   }
 
-  simpledb.ui.confirmDialog.show('Delete Domain', 'Are you ok to delete "' + domainName + '"?', function(ret) {
+  simpledb.ui.messageDialog.show('Delete Domain', 'Are you ok to delete "' + domainName + '"?', function(ret) {
     if (ret) {
       var client = simpledb.event.createClient();
-      client.deleteDomain(domainName, function(err, result) {
+      client.deleteDomain(domainName, function(err) {
         if (err) {
           alert(err.message);
         } else {
@@ -123,7 +121,7 @@ simpledb.event.runQuery = function(e) {
       console.log(result);
       result.forEach(function(item) {
         var opt = $('<option>');
-        opt.text(item._id);
+        opt.attr('value', item.id).text(item.id);
         $.data(opt.get(0), 'item', item);
         items.append(opt);
       });
@@ -166,5 +164,5 @@ simpledb.event.keyupQuery = function(e) {
 simpledb.event.updateItemDetail = function() {
   var selected = $(':selected', this);
   var item = $.data(selected.get(0), 'item');
-  simpledb.ui.itemDetailEditor.setValue(JSON.stringify(item, null, '  '));
+  simpledb.ui.itemDetailEditor.setValue(JSON.stringify(item.attributes, null, '  '));
 };
