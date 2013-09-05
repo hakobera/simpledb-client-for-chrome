@@ -1,3 +1,5 @@
+*** Underconstruction! ***
+
 SimpleDB Client for Google Chrome
 ================================
 
